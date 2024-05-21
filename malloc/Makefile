@@ -33,6 +33,7 @@ tests := \
   tst-interpose-nothread \
   tst-interpose-thread \
   tst-malloc \
+  tst-malloc-alternate-path \
   tst-malloc-backtrace \
   tst-malloc-check \
   tst-malloc-fork-deadlock \
@@ -195,12 +196,16 @@ extra-libs-others = $(extra-libs)
 extra-test-objs += \
   tst-interpose-aux-nothread.o \
   tst-interpose-aux-thread.o \
+  tst-mmap-obstruction-lib.so \
 # extra-test-objs
 
 test-extras = \
   tst-interpose-aux-nothread \
   tst-interpose-aux-thread \
 # test-extras
+
+modules-names = \
+  tst-mmap-obstruction-lib
 
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
@@ -408,3 +413,7 @@ tst-mallocstate-malloc-check-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 # libc_malloc_debug.so.
 $(objpfx)tst-mallocstate: $(objpfx)libc_malloc_debug.so
 $(objpfx)tst-mallocstate-malloc-check: $(objpfx)libc_malloc_debug.so
+
+
+$(objpfx)tst-malloc-alternate-path.out: $(objpfx)tst-mmap-obstruction-lib.so
+tst-malloc-alternate-path-ENV = LD_PRELOAD=$(objpfx)tst-mmap-obstruction-lib.so
